@@ -59,7 +59,6 @@ def check_ball_bottom(screen, dc_settings, ballx, dog):
             ball.del_ball(ballx)
             create_ball(screen, dc_settings, ballx)
 
-
 def update_balls(screen, dc_settings, ballx, dog):
     """
     Check if the ball is at the bottom,
@@ -68,9 +67,10 @@ def update_balls(screen, dc_settings, ballx, dog):
     check_ball_bottom(screen, dc_settings, ballx, dog, )
     ballx.update(dc_settings)
 
-def update_screen(dc_settings, screen, dog, ballx):
+def update_screen(dc_settings, background, screen, dog, ballx):
     """Update images on the screen and flip to the new screen."""
     screen.fill(dc_settings.bg_color) #Redraw the screen during each pass through the loop.
+    screen.blit(background.image, background.rect)
     dog.blitme() #Redraw dog at its current location
     ballx.draw(screen) #Redraw each ball in the group to the screen
     pygame.display.flip() # Make the most recently drawn screen visible.

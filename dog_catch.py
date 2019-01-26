@@ -5,6 +5,7 @@ from settings import Settings
 from dog import Dog
 from ball import Ball
 import game_function as gf
+from background import Background
 
 def run_game():
     '''
@@ -20,6 +21,7 @@ def run_game():
 
 
     dog = Dog(dc_settings, screen)
+    background = Background()
     ballx = Group()
     gf.create_ballx(dc_settings, screen, ballx)
 
@@ -28,6 +30,6 @@ def run_game():
         gf.check_events(dc_settings, screen, dog)
         dog.update()
         gf.update_balls(screen, dc_settings, ballx, dog)
-        gf.update_screen(dc_settings, screen, dog, ballx)
+        gf.update_screen(dc_settings, background, screen, dog, ballx)
 
 run_game()
