@@ -16,19 +16,18 @@ def run_game():
     dc_settings = Settings() #Object of Settings() class
     screen = pygame.display.set_mode(
     (dc_settings.screen_width, dc_settings.screen_height)) #set screen size by passing in Settings width & height attributes
-    pygame.display.set_caption("ball Invasion")
+    pygame.display.set_caption("Dog Catch")
+
 
     dog = Dog(dc_settings, screen)
-    ball = Ball(dc_settings, screen)
+    ballx = Group()
+    gf.create_ballx(dc_settings, screen, ballx)
 
+    #Gmme main loop
     while True:
         gf.check_events(dc_settings, screen, dog)
         dog.update()
-        # gf.update_bullets(dc_settings, screen, dog, balls, bullets)
-        gf.update_balls(dc_settings, dog, ball)
-        gf.update_screen(dc_settings, screen, dog, ball)
-
-
-
+        gf.update_balls(screen, dc_settings, ballx, dog)
+        gf.update_screen(dc_settings, screen, dog, ballx)
 
 run_game()

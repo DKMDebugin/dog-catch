@@ -1,7 +1,7 @@
 import sys
 import pygame
+from random import randint
 
-from  dog import Dog
 from ball import Ball
 
 def check_events(dc_settings, screen, dog):
@@ -11,7 +11,6 @@ def check_events(dc_settings, screen, dog):
             sys.exit() # exit game
         elif event.type == pygame.KEYDOWN: #When key is pressed
             check_keydown_events(event, dc_settings, screen, dog)
-
         elif event.type == pygame.KEYUP: #When key is released
             check_keyup_events(event, dog)
 
@@ -31,35 +30,47 @@ def check_keyup_events(event, dog):
     elif event.key == pygame.K_LEFT:
         dog.moving_left = False
 
-def create_ball(dc_settings, screen, ball):
-    """Create an ball and place it in the row."""
-    ball = ball(dc_settings, screen)
+def create_ball(screen, dc_settings, ballx):
+    """Create a ball"""
+    ball = Ball(dc_settings, screen)
+    # Position the ball
+    #randomly choose the x-position of the ball
     ball_width = ball.rect.width
-    ball.rect.x = randint(ball_width, dc_settings.screen_width - ball_width)
-    ball.rect.top = screen.rect.top
-    balls.add(ball)
+    ball_sub_screen_width = dc_settings.screen_width - ball_width
+    ball.rect.x = randint(ball_width, ball_sub_screen_width)
+    ball.rect.y = ball.rect.height # Start each new ball at the top of the screen.
+    ballx.add(ball)
 
-def change_ball_direction(dc_settings, ball):
-    """Drop the ball"""
-    ball.rect.y += dc_settings.ball_drop_speed
+def create_ballx(dc_settings, screen, ballx):
+    """Create balllx."""
+    ball = Ball(dc_settings, screen)
+    number_ball_x = 1
+    for ball_x in range(number_ball_x):
+        create_ball(screen, dc_settings, ballx)
+
+def check_ball_bottom(screen, dc_settings, ballx, dog):
+    """check if ball is at the bottom, del & creae another"""
+    for ball in ballx.sprites():
+        if ball.check_bottom(dc_settings):
+            ball.del_ball(ballx)
+            create_ball(screen, dc_settings, ballx)
+            break
+        if ball.check_ball_dog_collision(dog):
+            ball.del_ball(ballx)
+            create_ball(screen, dc_settings, ballx)
 
 
-def update_balls(dc_settings, dog, ball):
+def update_balls(screen, dc_settings, ballx, dog):
     """
-    Check if the fleet is at an edge,
-    Update the postions of all balls in the fleet.
+    Check if the ball is at the bottom,
+    Update the postions of  ball in the fleet.
     """
-    change_ball_direction(dc_settings, ball)
-    ball.update(dc_settings)
+    check_ball_bottom(screen, dc_settings, ballx, dog, )
+    ballx.update(dc_settings)
 
-    # collisions = pygame.sprite.groupcollide(bullets, balls, True, True)
-    # create_fleet(ai_settings, screen, ship, balls)
-
-def update_screen(dc_settings, screen, dog, ball):
+def update_screen(dc_settings, screen, dog, ballx):
     """Update images on the screen and flip to the new screen."""
-
     screen.fill(dc_settings.bg_color) #Redraw the screen during each pass through the loop.
-
     dog.blitme() #Redraw dog at its current location
-    ball.blitme() #Redraw each ball in the group to the screen
+    ballx.draw(screen) #Redraw each ball in the group to the screen
     pygame.display.flip() # Make the most recently drawn screen visible.
